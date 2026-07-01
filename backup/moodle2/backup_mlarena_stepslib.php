@@ -22,20 +22,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Define the complete mlarena structure for backup, with file and id annotations.
  */
 class backup_mlarena_activity_structure_step extends backup_activity_structure_step {
-
     /**
      * Define the backup structure.
      *
      * @return backup_nested_element
      */
     protected function define_structure() {
-
         // The mlarena module stores no per-user data.
         $mlarena = new backup_nested_element('mlarena', ['id'], [
             'name', 'intro', 'introformat', 'reftype', 'competitionid', 'joincode',

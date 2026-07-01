@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /** Display the activity as a Moodle landing page with a launch button. */
 define('MLARENA_DISPLAY_PAGE', 0);
 

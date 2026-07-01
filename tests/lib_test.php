@@ -32,7 +32,6 @@ require_once($CFG->dirroot . '/mod/mlarena/locallib.php');
  * @covers     \mlarena_supports
  */
 final class lib_test extends \advanced_testcase {
-
     /**
      * The module should declare the features an interactive-content activity needs.
      */

@@ -28,7 +28,7 @@ require_once($CFG->dirroot . '/mod/mlarena/locallib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
 $id = optional_param('id', 0, PARAM_INT);       // Course module id.
-$m  = optional_param('m', 0, PARAM_INT);         // mlarena instance id.
+$m  = optional_param('m', 0, PARAM_INT);         // The mlarena instance id.
 
 if ($m) {
     $mlarena = $DB->get_record('mlarena', ['id' => $m], '*', MUST_EXIST);

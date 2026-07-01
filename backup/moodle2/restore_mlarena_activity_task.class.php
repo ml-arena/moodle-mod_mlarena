@@ -31,7 +31,6 @@ require_once($CFG->dirroot . '/mod/mlarena/backup/moodle2/restore_mlarena_stepsl
  * restore of the activity.
  */
 class restore_mlarena_activity_task extends restore_activity_task {
-
     /**
      * No particular settings for this activity.
      */

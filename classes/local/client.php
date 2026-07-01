@@ -29,7 +29,6 @@ namespace mod_mlarena\local;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class client {
-
     /** @var string Base URL of the ML-Arena site, without a trailing slash. */
     protected $baseurl;
 

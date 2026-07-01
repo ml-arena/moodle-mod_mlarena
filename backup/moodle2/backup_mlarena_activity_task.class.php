@@ -30,7 +30,6 @@ require_once($CFG->dirroot . '/mod/mlarena/backup/moodle2/backup_mlarena_stepsli
  * Provides all the settings and steps to perform one complete backup of the activity.
  */
 class backup_mlarena_activity_task extends backup_activity_task {
-
     /**
      * No specific settings for this activity.
      */

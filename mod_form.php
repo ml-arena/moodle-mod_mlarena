@@ -35,14 +35,13 @@ require_once($CFG->dirroot . '/mod/mlarena/locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_mlarena_mod_form extends moodleform_mod {
-
     /**
      * Define the form fields.
      */
     public function definition() {
         $mform = $this->_form;
 
-        // -- General ---------------------------------------------------------.
+        // General settings.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         $mform->addElement('text', 'name', get_string('name'), ['size' => '48']);
@@ -77,7 +76,7 @@ class mod_mlarena_mod_form extends moodleform_mod {
 
         $this->standard_intro_elements();
 
-        // -- Appearance ------------------------------------------------------.
+        // Appearance.
         $mform->addElement('header', 'appearancehdr', get_string('appearance'));
 
         $displayoptions = [
@@ -93,7 +92,7 @@ class mod_mlarena_mod_form extends moodleform_mod {
         $mform->setDefault('iframeheight', get_config('mod_mlarena', 'iframeheight'));
         $mform->hideIf('iframeheight', 'display', 'neq', MLARENA_DISPLAY_EMBED);
 
-        // -- Leaderboard -----------------------------------------------------.
+        // Leaderboard.
         $mform->addElement('header', 'leaderboardhdr', get_string('leaderboardheader', 'mlarena'));
 
         $mform->addElement('advcheckbox', 'showleaderboard', get_string('showleaderboard', 'mlarena'));
@@ -107,7 +106,7 @@ class mod_mlarena_mod_form extends moodleform_mod {
         $mform->hideIf('leaderboardcourseid', 'reftype', 'neq', MLARENA_REF_COMPETITION);
         $mform->hideIf('leaderboardcourseid', 'showleaderboard', 'notchecked');
 
-        // -- Standard elements ----------------------------------------------.
+        // Standard course module elements.
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
     }

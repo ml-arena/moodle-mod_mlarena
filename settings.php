@@ -27,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/mlarena/locallib.php');
 
 if ($ADMIN->fulltree) {
-
     // Connection settings.
     $settings->add(new admin_setting_configtext(
         'mod_mlarena/baseurl',
