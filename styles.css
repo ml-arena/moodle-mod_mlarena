@@ -1,0 +1,42 @@
+/* Styles for the mod_mlarena plugin. All selectors are namespaced under .mod-mlarena. */
+
+.mod-mlarena .mod-mlarena-comp-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+}
+
+.mod-mlarena .mod-mlarena-comp-title {
+    margin-top: 0;
+}
+
+.mod-mlarena .mod-mlarena-comp-thumb {
+    max-width: 240px;
+    height: auto;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.mod-mlarena .mod-mlarena-launch {
+    display: flex;
+    justify-content: center;
+}
+
+.mod-mlarena .mod-mlarena-joincode-hint {
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.mod-mlarena .mod-mlarena-joincode {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.mod-mlarena .mod-mlarena-iframe {
+    width: 100%;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+}
+
+.mod-mlarena .mod-mlarena-leaderboard {
+    width: 100%;
+}

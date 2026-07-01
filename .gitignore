@@ -1,0 +1,7 @@
+# Dependency / build artefacts (should never be committed for a Moodle plugin).
+/vendor/
+/node_modules/
+/.idea/
+/.vscode/
+*.log
+.DS_Store
