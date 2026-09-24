@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $definitions = [
 
-    // Cached response of GET /api/leaderboard/competition/{id}.
+    // Cached response of GET /api/leaderboard/challenge/{id} (the leaderboard envelope).
     'leaderboard' => [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
@@ -37,8 +37,8 @@ $definitions = [
         'ttl' => 300,
     ],
 
-    // Cached response of GET /api/competitions/{id}.
-    'competition' => [
+    // Cached response of GET /api/challenges/{id}.
+    'challenge' => [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'simpledata' => false,

@@ -47,9 +47,9 @@ class renderer extends \plugin_renderer_base {
             $out .= html_writer::div($intro, 'mod-mlarena-intro');
         }
 
-        // Optional competition metadata (name, description, thumbnail).
+        // Optional challenge metadata (name, description, thumbnail).
         if ($mlarena->reftype === MLARENA_REF_COMPETITION && !empty($mlarena->competitionid)) {
-            $out .= $this->render_competition_card((int)$mlarena->competitionid);
+            $out .= $this->render_challenge_card((int)$mlarena->competitionid);
         }
 
         // Launch button or embedded iframe.
@@ -80,7 +80,7 @@ class renderer extends \plugin_renderer_base {
     protected function render_launch($mlarena, moodle_url $targeturl): string {
         $label = $mlarena->reftype === MLARENA_REF_COURSE
             ? get_string('opencourse', 'mlarena')
-            : get_string('opencompetition', 'mlarena');
+            : get_string('openchallenge', 'mlarena');
 
         $button = html_writer::link($targeturl, $label, [
             'class' => 'btn btn-primary btn-lg',
@@ -134,88 +134,100 @@ class renderer extends \plugin_renderer_base {
     }
 
     /**
-     * Render a small metadata card for a competition, if the API responds.
+     * Render a small metadata card for a challenge, if the API responds.
      *
-     * @param int $competitionid
+     * @param int $challengeid
      * @return string HTML (empty when metadata is unavailable).
      */
-    protected function render_competition_card(int $competitionid): string {
+    protected function render_challenge_card(int $challengeid): string {
         $client = new client();
-        $comp = $client->get_competition($competitionid);
-        if (empty($comp) || empty($comp['name'])) {
+        $challenge = $client->get_challenge($challengeid);
+        if (empty($challenge) || $challenge['name'] === '') {
             return '';
         }
 
-        $title = html_writer::tag('h3', s($comp['name']), ['class' => 'mod-mlarena-comp-title']);
+        $title = html_writer::tag('h3', s($challenge['name']), ['class' => 'mod-mlarena-comp-title']);
 
         $body = '';
-        if (!empty($comp['miniature'])) {
+        if (!empty($challenge['miniature'])) {
+            // The API serves `miniature` as a path on the ML-Arena site, not on this Moodle site.
             $img = html_writer::empty_tag('img', [
-                'src' => (new moodle_url($comp['miniature']))->out(false),
-                'alt' => s($comp['name']),
+                'src' => (new moodle_url(mlarena_get_base_url() . $challenge['miniature']))->out(false),
+                'alt' => s($challenge['name']),
                 'class' => 'mod-mlarena-comp-thumb',
             ]);
             $body .= html_writer::div($img, 'mod-mlarena-comp-thumb-wrap');
         }
-        if (!empty($comp['description'])) {
+        if (!empty($challenge['description'])) {
             // Description is plain text from the API; escape and preserve line breaks.
-            $body .= html_writer::div(nl2br(s($comp['description'])), 'mod-mlarena-comp-desc');
+            $body .= html_writer::div(nl2br(s($challenge['description'])), 'mod-mlarena-comp-desc');
         }
 
         return html_writer::div($title . $body, 'mod-mlarena-comp-card card p-3 mb-3');
     }
 
     /**
-     * Render the competition leaderboard as a table.
+     * Render the challenge leaderboard as a table.
      *
-     * @param int      $competitionid
+     * Reads the backend's leaderboard envelope: the ranking settings from its
+     * `challenge` block, the rows from `leaders`.
+     *
+     * @param int      $challengeid
      * @param int|null $mlarenacourseid Optional ML-Arena course filter.
      * @return string HTML.
      */
-    protected function render_leaderboard(int $competitionid, ?int $mlarenacourseid): string {
+    protected function render_leaderboard(int $challengeid, ?int $mlarenacourseid): string {
         $client = new client();
-        $rows = $client->get_leaderboard($competitionid, $mlarenacourseid);
+        $envelope = $client->get_leaderboard($challengeid, $mlarenacourseid);
 
         $heading = html_writer::tag('h3', get_string('leaderboard', 'mlarena'), ['class' => 'mod-mlarena-lb-title mt-3']);
 
-        if ($rows === null) {
+        if ($envelope === null) {
             return $heading . $this->output->notification(get_string('leaderboardunavailable', 'mlarena'), 'warning');
         }
+        $rows = $envelope['leaders'];
         if (count($rows) === 0) {
             return $heading . html_writer::div(get_string('leaderboardempty', 'mlarena'), 'text-muted');
         }
 
-        // Metric label and precision come from the first row (competition-level).
-        $first = $rows[0];
-        $iselo = !empty($first['IsEloRanked']);
+        // Metric label and precision are the challenge's, served once on the envelope.
+        $challenge = $envelope['challenge'];
+        $iselo = !empty($challenge['is_elo_score']);
         $metriclabel = $iselo
             ? get_string('elo', 'mlarena')
-            : (!empty($first['Metric']) ? s($first['Metric']) : get_string('score', 'mlarena'));
-        $precision = isset($first['FrontendPrecision']) ? (int)$first['FrontendPrecision'] : 2;
+            : (!empty($challenge['metric']) ? s($challenge['metric']) : get_string('score', 'mlarena'));
+        $precision = (int)$challenge['frontend_precision'];
 
         $table = new \html_table();
         $table->head = [
             get_string('rank', 'mlarena'),
             get_string('participant', 'mlarena'),
-            get_string('agent', 'mlarena'),
+            get_string('submission', 'mlarena'),
             $metriclabel,
             get_string('episodes', 'mlarena'),
         ];
         $table->attributes['class'] = 'generaltable mod-mlarena-leaderboard';
 
         foreach ($rows as $row) {
-            $score = $iselo ? ($row['EloScore'] ?? null) : ($row['MeanReward'] ?? null);
+            $score = $iselo ? ($row['elo_score'] ?? null) : ($row['mean_reward'] ?? null);
             $scorecell = is_numeric($score) ? format_float((float)$score, $precision) : '-';
 
             $table->data[] = [
-                isset($row['Rank']) ? (int)$row['Rank'] : '',
-                !empty($row['TeamName']) ? s($row['TeamName']) : s($row['Username'] ?? ''),
-                s($row['AgentName'] ?? ''),
+                (int)$row['rank'],
+                !empty($row['team_name']) ? s($row['team_name']) : s($row['username']),
+                s($row['submission_name']),
                 $scorecell,
-                isset($row['NEpisodes']) ? (int)$row['NEpisodes'] : '',
+                (int)$row['n_episodes_total'],
             ];
         }
 
-        return $heading . html_writer::table($table);
+        $out = $heading . html_writer::table($table);
+        if ($envelope['total'] > count($rows)) {
+            $out .= html_writer::div(
+                get_string('leaderboardtruncated', 'mlarena', (object)['shown' => count($rows), 'total' => $envelope['total']]),
+                'mod-mlarena-lb-truncated text-muted'
+            );
+        }
+        return $out;
     }
 }

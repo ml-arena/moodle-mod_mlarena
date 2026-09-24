@@ -54,7 +54,7 @@ final class lib_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $module = $this->getDataGenerator()->create_module('mlarena', [
             'course' => $course->id,
-            'name' => 'Test competition',
+            'name' => 'Test challenge',
             'reftype' => 'competition',
             'competitionid' => 42,
         ]);
@@ -73,7 +73,7 @@ final class lib_test extends \advanced_testcase {
         $updated = $DB->get_record('mlarena', ['id' => $module->id], '*', MUST_EXIST);
         $this->assertSame('course', $updated->reftype);
         $this->assertSame('ABC123XY', $updated->joincode);
-        // Competition-only fields are cleared when switching to a course link.
+        // Challenge-only fields are cleared when switching to a course link.
         $this->assertNull($updated->competitionid);
 
         $this->assertTrue(mlarena_delete_instance($module->id));
@@ -86,14 +86,14 @@ final class lib_test extends \advanced_testcase {
     public function test_get_target_url(): void {
         set_config('baseurl', 'https://ml-arena.com', 'mod_mlarena');
 
-        $competition = (object)[
+        $challenge = (object)[
             'reftype' => 'competition',
             'competitionid' => 42,
             'joincode' => null,
         ];
         $this->assertSame(
-            'https://ml-arena.com/viewcompetition/42',
-            mlarena_get_target_url($competition)->out(false)
+            'https://ml-arena.com/viewchallenge/42',
+            mlarena_get_target_url($challenge)->out(false)
         );
 
         $courselink = (object)[

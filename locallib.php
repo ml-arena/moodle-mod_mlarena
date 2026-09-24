@@ -28,7 +28,13 @@ define('MLARENA_DISPLAY_PAGE', 0);
 /** Display the ML-Arena page embedded in an iframe. */
 define('MLARENA_DISPLAY_EMBED', 1);
 
-/** Reference type: an ML-Arena competition. */
+/**
+ * Reference type: an ML-Arena challenge.
+ *
+ * The stored value (and the `competitionid` field that goes with it) keeps the
+ * name ML-Arena used before it renamed competitions to challenges, so existing
+ * activities and backups stay valid without an upgrade step.
+ */
 define('MLARENA_REF_COMPETITION', 'competition');
 
 /** Reference type: an ML-Arena academic course (join code). */
@@ -67,7 +73,7 @@ function mlarena_get_target_url($mlarena) {
     if (empty($mlarena->competitionid)) {
         return null;
     }
-    return new moodle_url($base . '/viewcompetition/' . (int)$mlarena->competitionid);
+    return new moodle_url($base . '/viewchallenge/' . (int)$mlarena->competitionid);
 }
 
 /**

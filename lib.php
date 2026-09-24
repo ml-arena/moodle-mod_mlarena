@@ -123,12 +123,12 @@ function mlarena_prepare_record($data) {
     global $CFG;
     require_once($CFG->dirroot . '/mod/mlarena/locallib.php');
 
-    if ($data->reftype === 'course') {
+    if ($data->reftype === MLARENA_REF_COURSE) {
         $data->competitionid = null;
         $data->showleaderboard = 0;
         $data->leaderboardcourseid = null;
     } else {
-        $data->reftype = 'competition';
+        $data->reftype = MLARENA_REF_COMPETITION;
         $data->joincode = null;
     }
 

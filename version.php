@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_mlarena';       // Full frankenstyle name of the plugin.
-$plugin->version   = 2026070100;          // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2026092400;          // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2024100700;          // Requires Moodle 4.5 (LTS) or later.
-$plugin->maturity  = MATURITY_BETA;       // This is a first public release.
-$plugin->release   = 'v1.0.0-beta';       // Human-friendly version name.
+$plugin->maturity  = MATURITY_BETA;
+$plugin->release   = 'v1.0.0-beta2';      // Human-friendly version name.
 $plugin->cron      = 0;

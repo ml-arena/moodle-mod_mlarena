@@ -22,7 +22,7 @@ use core_privacy\local\metadata\collection;
  * Privacy Subsystem implementation for mod_mlarena.
  *
  * The plugin stores no personal data in Moodle: the mlarena table only holds
- * the teacher's configuration (competition id, join code, display options).
+ * the teacher's configuration (challenge id, join code, display options).
  * It does, however, integrate with the external ML-Arena platform, so the
  * external location link is declared here as required for external services.
  *

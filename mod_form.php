@@ -55,17 +55,17 @@ class mod_mlarena_mod_form extends moodleform_mod {
 
         // What are we linking to?
         $reftypes = [
-            MLARENA_REF_COMPETITION => get_string('reftype_competition', 'mlarena'),
+            MLARENA_REF_COMPETITION => get_string('reftype_challenge', 'mlarena'),
             MLARENA_REF_COURSE => get_string('reftype_course', 'mlarena'),
         ];
         $mform->addElement('select', 'reftype', get_string('reftype', 'mlarena'), $reftypes);
         $mform->setDefault('reftype', MLARENA_REF_COMPETITION);
         $mform->addHelpButton('reftype', 'reftype', 'mlarena');
 
-        // Competition id (shown for competition reference).
-        $mform->addElement('text', 'competitionid', get_string('competitionid', 'mlarena'), ['size' => '10']);
+        // Challenge id (shown for a challenge reference; stored in the competitionid field).
+        $mform->addElement('text', 'competitionid', get_string('challengeid', 'mlarena'), ['size' => '10']);
         $mform->setType('competitionid', PARAM_INT);
-        $mform->addHelpButton('competitionid', 'competitionid', 'mlarena');
+        $mform->addHelpButton('competitionid', 'challengeid', 'mlarena');
         $mform->hideIf('competitionid', 'reftype', 'neq', MLARENA_REF_COMPETITION);
 
         // Join code (shown for course reference).
@@ -127,7 +127,7 @@ class mod_mlarena_mod_form extends moodleform_mod {
             }
         } else {
             if (empty($data['competitionid']) || (int)$data['competitionid'] <= 0) {
-                $errors['competitionid'] = get_string('error_competitionid_required', 'mlarena');
+                $errors['competitionid'] = get_string('error_challengeid_required', 'mlarena');
             }
         }
 

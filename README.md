@@ -1,25 +1,27 @@
-# ML-Arena competition activity for Moodle (mod_mlarena)
+# ML-Arena challenge activity for Moodle (mod_mlarena)
 
-Bring [ML-Arena](https://ml-arena.com) machine-learning competitions and academic
+Bring [ML-Arena](https://ml-arena.com) machine-learning challenges and academic
 courses straight into your Moodle course. Once installed, teachers get a new
-**ML-Arena competition** entry in *Add an activity or resource*, alongside Quiz,
+**ML-Arena challenge** entry in *Add an activity or resource*, alongside Quiz,
 Assignment and the rest.
 
 ## What it does
 
-* Adds an **activity module** so a teacher can attach an ML-Arena competition or
+* Adds an **activity module** so a teacher can attach an ML-Arena challenge or
   academic course to any course section.
-* Students open the competition from inside Moodle — either as a **landing page**
+* Students open the challenge from inside Moodle — either as a **landing page**
   with a launch button, or **embedded** in an iframe.
 * For course links, the ML-Arena **join code** is shown so students can
   self-enrol.
-* Optionally renders the competition's **live leaderboard** on the activity page,
-  read from the public ML-Arena API (with an optional filter to a specific
-  ML-Arena course's students).
+* Optionally renders the challenge's **live leaderboard** on the activity page
+  (one row per participant or team, top 100), read from the public ML-Arena API
+  (with an optional filter to a specific ML-Arena course's students).
 
-It only reads **public** ML-Arena endpoints (`/api/competitions/{id}` and
-`/api/leaderboard/competition/{id}`), so no API token or Moodle personal data is
-sent to ML-Arena by the server.
+It only reads **public**, unauthenticated ML-Arena endpoints
+(`GET /api/challenges/{id}` and `GET /api/leaderboard/challenge/{id}`), so no
+API token or Moodle personal data is sent to ML-Arena by the server. Version
+v1.0.0-beta2 or later is required: ML-Arena removed the older
+`/api/competitions/…` routes that v1.0.0-beta called.
 
 ## Requirements
 
@@ -42,14 +44,14 @@ sent to ML-Arena by the server.
    *Site administration → Plugins → Install plugins*.
 2. Visit *Site administration → Notifications* to run the database upgrade.
 3. (Optional) Set the ML-Arena base URL and defaults under
-   *Site administration → Plugins → Activity modules → ML-Arena competition*.
+   *Site administration → Plugins → Activity modules → ML-Arena challenge*.
 
 ## Usage
 
 1. In a course, turn editing on and choose **Add an activity or resource →
-   ML-Arena competition**.
-2. Pick **Competition** and enter the numeric competition id (the `42` in
-   `https://ml-arena.com/viewcompetition/42`), **or** pick **Course** and enter
+   ML-Arena challenge**.
+2. Pick **Challenge** and enter the numeric challenge id (the `42` in
+   `https://ml-arena.com/viewchallenge/42`), **or** pick **Course** and enter
    the course join code.
 3. Choose whether to show it as a landing page or embedded, and whether to show
    the leaderboard.

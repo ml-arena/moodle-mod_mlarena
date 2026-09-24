@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/mlarena/db" VERSION="20260701" COMMENT="XMLDB file for the ML-Arena competition activity module"
+<XMLDB PATH="mod/mlarena/db" VERSION="20260701" COMMENT="XMLDB file for the ML-Arena challenge activity module"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="mlarena" COMMENT="Each record is one ML-Arena competition or course activity instance.">
+    <TABLE NAME="mlarena" COMMENT="Each record is one ML-Arena challenge or course activity instance.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Course id the activity belongs to."/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Activity name shown in the course."/>
         <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Activity description."/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, PLAIN, MARKDOWN)."/>
-        <FIELD NAME="reftype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="competition" SEQUENCE="false" COMMENT="What is being linked: competition or course."/>
-        <FIELD NAME="competitionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Numeric ML-Arena competition id (when reftype=competition)."/>
+        <FIELD NAME="reftype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="competition" SEQUENCE="false" COMMENT="What is being linked: competition (an ML-Arena challenge) or course."/>
+        <FIELD NAME="competitionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Numeric ML-Arena challenge id (when reftype=competition)."/>
         <FIELD NAME="joincode" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" COMMENT="ML-Arena course join code or enrollment link (when reftype=course)."/>
         <FIELD NAME="display" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="How to present the activity: 0=landing page, 1=embedded iframe."/>
         <FIELD NAME="iframeheight" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="720" SEQUENCE="false" COMMENT="Iframe height in pixels when display=embed."/>
-        <FIELD NAME="showleaderboard" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether to render the competition leaderboard on the activity page."/>
+        <FIELD NAME="showleaderboard" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether to render the challenge leaderboard on the activity page."/>
         <FIELD NAME="leaderboardcourseid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Optional ML-Arena course id used to filter the leaderboard to that course's students."/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp of the last modification."/>
       </FIELDS>

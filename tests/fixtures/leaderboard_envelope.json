@@ -1,0 +1,46 @@
+{
+  "challenge": {
+    "challenge_id": 42,
+    "is_elo_score": false,
+    "metric_order": "desc",
+    "ranked_order": "desc",
+    "metric": "Accuracy",
+    "metric2": null,
+    "frontend_precision": 3,
+    "metrics_schema": null,
+    "has_gpu": false,
+    "is_continuous": false
+  },
+  "total": 1,
+  "leaders": [
+    {
+      "rank": 1,
+      "username": "alice",
+      "avatar_key": null,
+      "submission_id": 7,
+      "submission_name": "baseline-v2",
+      "mean_reward": 0.91234,
+      "mean_reward2": null,
+      "reward_ci95": null,
+      "n_episodes_total": 12,
+      "elo_score": null,
+      "elo_variance": null,
+      "number_of_runs": 3,
+      "created_at_ts": "2026-09-01T10:00:00Z",
+      "last_end_run_ts": "2026-09-02T10:00:00Z",
+      "is_my_submission": false,
+      "team_id": null,
+      "team_name": null,
+      "team_members": [],
+      "action_time_max_sec": null,
+      "agent_metric_total_ram_max_bytes": null,
+      "agent_metric_vram_max_bytes": null,
+      "mean_metrics_detail": null,
+      "mean_reward_30d": null,
+      "mean_metrics_detail_30d": null,
+      "is_public": true
+    }
+  ],
+  "me": null,
+  "matches": null
+}
