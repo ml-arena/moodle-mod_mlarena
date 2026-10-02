@@ -35,7 +35,6 @@ $string['displayselect_help'] = 'How the challenge or course is shown:
 
 * **Landing page** - a page in Moodle with a button that opens ML-Arena in a new tab.
 * **Embedded** - the ML-Arena page is shown inside an iframe on the activity page. This only works if ML-Arena allows itself to be framed; otherwise use the landing page.';
-$string['elo'] = 'Elo';
 $string['embedfallback'] = 'Not seeing the challenge? Open it directly: {$a}';
 $string['episodes'] = 'Episodes';
 $string['error_challengeid_required'] = 'Enter a valid numeric challenge id.';
@@ -78,7 +77,6 @@ $string['reftype_help'] = 'Choose what this activity points to:
 
 * **Challenge** - a single ML-Arena challenge, identified by its numeric id.
 * **Course** - an ML-Arena academic course that students self-enrol into with a join code.';
-$string['score'] = 'Score';
 $string['setting_baseurl'] = 'ML-Arena base URL';
 $string['setting_baseurl_desc'] = 'Base URL of the ML-Arena platform used to build links and to call the public API. The default is https://ml-arena.com.';
 $string['setting_requesttimeout'] = 'API request timeout (seconds)';

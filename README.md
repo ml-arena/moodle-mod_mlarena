@@ -20,8 +20,10 @@ Assignment and the rest.
 It only reads **public**, unauthenticated ML-Arena endpoints
 (`GET /api/challenges/{id}` and `GET /api/leaderboard/challenge/{id}`), so no
 API token or Moodle personal data is sent to ML-Arena by the server. Version
-v1.0.0-beta2 or later is required: ML-Arena removed the older
-`/api/competitions/…` routes that v1.0.0-beta called.
+v1.0.0-beta3 or later is required: ML-Arena removed the older
+`/api/competitions/…` routes that v1.0.0-beta called, and the leaderboard keys
+(`mean_reward`, `elo_score`, `is_elo_score`, `metric`, `frontend_precision`)
+that v1.0.0-beta2 read.
 
 ## Requirements
 

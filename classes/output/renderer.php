@@ -17,6 +17,7 @@
 namespace mod_mlarena\output;
 
 use mod_mlarena\local\client;
+use mod_mlarena\local\metric_format;
 use html_writer;
 use moodle_url;
 
@@ -169,8 +170,11 @@ class renderer extends \plugin_renderer_base {
     /**
      * Render the challenge leaderboard as a table.
      *
-     * Reads the backend's leaderboard envelope: the ranking settings from its
-     * `challenge` block, the rows from `leaders`.
+     * Reads the backend's leaderboard envelope: the columns from its
+     * `challenge.metrics` descriptors (the ranking descriptor first, then
+     * every other `visible` one, in declaration order), the rows from
+     * `leaders`. A row's ranking value is its `score`, any other value is
+     * `metrics[key]`; each is formatted by its descriptor.
      *
      * @param int      $challengeid
      * @param int|null $mlarenacourseid Optional ML-Arena course filter.
@@ -190,35 +194,39 @@ class renderer extends \plugin_renderer_base {
             return $heading . html_writer::div(get_string('leaderboardempty', 'mlarena'), 'text-muted');
         }
 
-        // Metric label and precision are the challenge's, served once on the envelope.
-        $challenge = $envelope['challenge'];
-        $iselo = !empty($challenge['is_elo_score']);
-        $metriclabel = $iselo
-            ? get_string('elo', 'mlarena')
-            : (!empty($challenge['metric']) ? s($challenge['metric']) : get_string('score', 'mlarena'));
-        $precision = (int)$challenge['frontend_precision'];
+        $ranking = client::ranking_spec($envelope);
+        $others = array_values(array_filter($envelope['challenge']['metrics'], function (array $spec): bool {
+            return $spec['visible'] === true && $spec['is_ranking'] !== true;
+        }));
 
         $table = new \html_table();
         $table->head = [
             get_string('rank', 'mlarena'),
             get_string('participant', 'mlarena'),
             get_string('submission', 'mlarena'),
-            $metriclabel,
-            get_string('episodes', 'mlarena'),
+            s(metric_format::header($ranking)),
         ];
+        foreach ($others as $spec) {
+            $table->head[] = s(metric_format::header($spec));
+        }
+        $table->head[] = get_string('episodes', 'mlarena');
         $table->attributes['class'] = 'generaltable mod-mlarena-leaderboard';
 
         foreach ($rows as $row) {
-            $score = $iselo ? ($row['elo_score'] ?? null) : ($row['mean_reward'] ?? null);
-            $scorecell = is_numeric($score) ? format_float((float)$score, $precision) : '-';
-
-            $table->data[] = [
+            $cells = [
                 (int)$row['rank'],
                 !empty($row['team_name']) ? s($row['team_name']) : s($row['username']),
                 s($row['submission_name']),
-                $scorecell,
-                (int)$row['n_episodes_total'],
+                s(metric_format::format($row['score'], $ranking)),
             ];
+            foreach ($others as $spec) {
+                $value = is_array($row['metrics']) && array_key_exists($spec['key'], $row['metrics'])
+                    ? $row['metrics'][$spec['key']]
+                    : null;
+                $cells[] = s(metric_format::format($value, $spec));
+            }
+            $cells[] = (int)$row['n_episodes_total'];
+            $table->data[] = $cells;
         }
 
         $out = $heading . html_writer::table($table);

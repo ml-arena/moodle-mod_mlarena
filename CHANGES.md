@@ -2,6 +2,28 @@
 
 All notable changes to mod_mlarena are documented here.
 
+## v1.0.0-beta3 (2026-10-02)
+
+ML-Arena's score model (2026-10-02) removed the leaderboard keys v1.0.0-beta2
+reads, so v1.0.0-beta2 shows "The leaderboard could not be loaded". Upgrade
+required.
+
+* The leaderboard columns come from the envelope's `challenge.metrics`
+  descriptors: the ranking descriptor (`is_ranking`) first, then every other
+  `visible` one, in declaration order. Each column is headed by the
+  descriptor's `label` (plus its `unit`, except for currency).
+* A row's ranking value is its `score`; any other column reads
+  `metrics[key]`. Values are formatted by the descriptor's `format`
+  (`number`, `integer`, `percent`, `seconds`, `bytes`, `currency`), `unit`
+  and `precision`, as on ML-Arena.
+* Removed reads: `challenge.is_elo_score`, `challenge.metric`,
+  `challenge.frontend_precision`, row `mean_reward` and `elo_score`. A rated
+  (Elo) challenge declares a `rating` descriptor, so it needs no special case.
+* An envelope without exactly one ranking descriptor, or with a format the
+  plugin cannot display, is refused (the activity shows the "could not be
+  loaded" notice).
+* Removed the now unused `elo` and `score` language strings.
+
 ## v1.0.0-beta2 (2026-09-24)
 
 ML-Arena renamed *competitions* to *challenges* and removed the old API routes,

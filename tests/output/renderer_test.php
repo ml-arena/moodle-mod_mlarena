@@ -72,6 +72,10 @@ final class renderer_test extends \advanced_testcase {
         $this->assertStringContainsString('alice', $html);
         $this->assertStringContainsString('baseline-v2', $html);
         $this->assertStringContainsString(format_float(0.91234, 3), $html);
+        // A visible non-ranking descriptor is a column formatted by its own spec; a hidden one is not shown.
+        $this->assertStringContainsString('Train time', $html);
+        $this->assertStringContainsString(format_float(12.5, 1) . "\u{202F}s", $html);
+        $this->assertStringNotContainsString('Max step time', $html);
         $truncated = get_string('leaderboardtruncated', 'mlarena', (object)['shown' => 1, 'total' => 250]);
         $this->assertStringContainsString($truncated, $html);
     }

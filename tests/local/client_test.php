@@ -99,6 +99,7 @@ final class client_test extends \advanced_testcase {
         $client = $this->recording_client($this->envelope());
         $envelope = $client->get_leaderboard(42);
         $this->assertSame('baseline-v2', $envelope['leaders'][0]['submission_name']);
+        $this->assertSame(0.91234, $envelope['leaders'][0]['score']);
 
         $client->get_leaderboard(42, 15);
         $this->assertSame([
@@ -116,5 +117,54 @@ final class client_test extends \advanced_testcase {
         $client = $this->recording_client([['Rank' => 1, 'Username' => 'alice']]);
         $this->assertNull($client->get_leaderboard(42));
         $this->assertDebuggingCalled();
+    }
+
+    /**
+     * The pre-score-model envelope (`is_elo_score`, `metric`, `frontend_precision`, rows with `mean_reward`) is refused.
+     */
+    public function test_get_leaderboard_rejects_pre_score_model_envelope(): void {
+        $this->resetAfterTest();
+
+        $legacy = $this->envelope();
+        $legacy['challenge'] = [
+            'challenge_id' => 42,
+            'is_elo_score' => false,
+            'metric' => 'Accuracy',
+            'frontend_precision' => 3,
+        ];
+        $client = $this->recording_client($legacy);
+        $this->assertNull($client->get_leaderboard(42));
+        $this->assertDebuggingCalled();
+    }
+
+    /**
+     * An envelope is refused unless exactly one descriptor ranks and every format is displayable.
+     */
+    public function test_get_leaderboard_validates_descriptors(): void {
+        $this->resetAfterTest();
+
+        $noranking = $this->envelope();
+        $noranking['challenge']['metrics'][0]['is_ranking'] = false;
+        $this->assertNull($this->recording_client($noranking)->get_leaderboard(42));
+        $this->assertDebuggingCalled();
+
+        $tworankings = $this->envelope();
+        $tworankings['challenge']['metrics'][1]['is_ranking'] = true;
+        $this->assertNull($this->recording_client($tworankings)->get_leaderboard(43));
+        $this->assertDebuggingCalled();
+
+        $unknownformat = $this->envelope();
+        $unknownformat['challenge']['metrics'][1]['format'] = 'duration';
+        $this->assertNull($this->recording_client($unknownformat)->get_leaderboard(44));
+        $this->assertDebuggingCalled();
+    }
+
+    /**
+     * The ranking descriptor is the one whose value each row serves as `score`.
+     */
+    public function test_ranking_spec(): void {
+        $spec = client::ranking_spec($this->envelope());
+        $this->assertSame('reward', $spec['key']);
+        $this->assertSame('Accuracy', $spec['label']);
     }
 }

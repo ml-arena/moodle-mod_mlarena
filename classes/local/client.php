@@ -86,10 +86,13 @@ class client {
      * Fetch a challenge leaderboard: GET /api/leaderboard/challenge/{id}.
      *
      * The response is the backend's `LeaderboardEnvelope`, one JSON object:
-     * `challenge` (the ranking settings every row shares: `is_elo_score`,
-     * `metric`, `ranked_order`, `frontend_precision`, ...), `total` (every
-     * ranked row), `leaders` (the first rows, snake_case), `me`, `matches`
-     * and, with a course filter, `course_context`.
+     * `challenge` (what every row shares: `metrics`, the ordered list of
+     * metric descriptors, exactly one of them `is_ranking`, and
+     * `window_days`), `total` (every ranked row), `leaders` (the first rows:
+     * `rank`, `username`, `team_name`, `submission_name`, `score` = the
+     * ranking descriptor's value, `metrics` = every declared key's value,
+     * `n_episodes_total`, ...), `me`, `matches` and, with a course filter,
+     * `course_context`.
      *
      * The board is requested with `aggregate=user` (one row per participant
      * or team, as the ML-Arena console shows it) and `limit`.
@@ -131,14 +134,56 @@ class client {
     /**
      * Whether a decoded response has the leaderboard envelope's shape.
      *
+     * Besides the envelope keys, every metric descriptor must carry the keys
+     * the renderer reads with a format it can display, and exactly one must
+     * be the ranking descriptor.
+     *
      * @param array $data Decoded response.
      * @return bool
      */
     protected static function is_leaderboard_envelope(array $data): bool {
-        return isset($data['challenge']) && is_array($data['challenge'])
-            && array_key_exists('is_elo_score', $data['challenge'])
+        $isenvelope = isset($data['challenge']['metrics']) && is_array($data['challenge']['metrics'])
             && isset($data['leaders']) && is_array($data['leaders'])
             && isset($data['total']) && is_int($data['total']);
+        if (!$isenvelope) {
+            return false;
+        }
+        $rankings = 0;
+        foreach ($data['challenge']['metrics'] as $spec) {
+            if (!is_array($spec)) {
+                return false;
+            }
+            foreach (['key', 'label', 'format', 'unit', 'precision', 'is_ranking', 'visible'] as $key) {
+                if (!array_key_exists($key, $spec)) {
+                    return false;
+                }
+            }
+            if (!in_array($spec['format'], metric_format::FORMATS, true)) {
+                return false;
+            }
+            if ($spec['format'] === 'currency' && empty($spec['unit'])) {
+                return false;
+            }
+            if ($spec['is_ranking'] === true) {
+                $rankings++;
+            }
+        }
+        return $rankings === 1;
+    }
+
+    /**
+     * The ranking descriptor of a validated envelope: the one whose value is each row's `score`.
+     *
+     * @param array $envelope A leaderboard envelope returned by get_leaderboard().
+     * @return array The metric descriptor.
+     */
+    public static function ranking_spec(array $envelope): array {
+        foreach ($envelope['challenge']['metrics'] as $spec) {
+            if ($spec['is_ranking'] === true) {
+                return $spec;
+            }
+        }
+        throw new \coding_exception('mod_mlarena: leaderboard envelope without a ranking descriptor.');
     }
 
     /**
