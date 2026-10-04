@@ -59,6 +59,21 @@ that v1.0.0-beta2 read.
    the leaderboard.
 4. Save. Students now see the activity in the course.
 
+## Known limitations
+
+* **Embedded display is read-only.** ML-Arena's sign-in cookie is not sent inside
+  an iframe on another site, so learners browse the embedded page signed out.
+  Use the landing page whenever learners must sign in to submit or join a team.
+* **No grade or identity link.** Learners use their own ML-Arena account. Moodle
+  completion tracks views only, and no score is sent to the gradebook. To show
+  only your cohort on the leaderboard, enrol the learners in an ML-Arena course
+  and enter its id in *ML-Arena course id*.
+* **A course link opens the ML-Arena enrolment page.** The lessons stay on
+  ML-Arena.
+* **Only public challenges show details and a leaderboard.** A private challenge
+  shows the "could not be loaded" notice.
+* The plugin ships English strings only.
+
 ## Privacy
 
 The plugin stores only the teacher's configuration in Moodle. It does not store
